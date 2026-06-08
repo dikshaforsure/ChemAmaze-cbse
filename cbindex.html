@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChemAmaze Bilingual Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+        h1 {
+            font-weight: 700;
+        }
+
+        h2 {
+            font-weight: 600;
+        }
+
+        .item-link {
+            font-weight: 500;
+        }
+
+        .enter-link {
+            font-weight: 700;
+        }
+        
+        :root {
+            --primary-color: #4a154b;
+            --secondary-color: #007a5a;
+            --accent-color: #ecb22e;
+            --bg-color: #f4f5f6;
+            --text-color: #1d1c1d;
+            --blue-theme: #21A0D2;
+        }
+
+        /* --- BODY STYLES --- */
+        body {
+            background-color: var(--blue-theme);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        body.theme-home {
+            background-color: var(--blue-theme);
+        }
+        body.theme-inner {
+            background-color: var(--bg-color);
+        }
+
+        /* --- CONTAINER STYLES --- */
+        .app-container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            padding: 25px 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-top: 10px;
+            position: relative;
+            min-height: 460px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .app-container.home-active {
+            background: transparent;
+            box-shadow: none;
+        }
+
+        /* --- FIXED ONE-LINE TOP BAR ALIGNMENT --- */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center; 
+            width: 100%;
+            margin-bottom: 25px;
+            padding: 0 4px;
+        }
+
+        .top-logo {
+            width: 110px;
+            height: auto;
+            object-fit: contain;
+            margin-left: -8px;
+        }
+
+        .lang-bar {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .lang-toggle-btn {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .lang-toggle-btn.active {
+            background-color: #21A0D2;
+            color: white;
+            border-color: #21A0D2;
+        }
+
+        .home-active .lang-toggle-btn {
+            border-color: rgba(255, 255, 255, 0.4);
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .home-active .lang-toggle-btn.active {
+            background-color: #ffffff;
+            color: #21A0D2;
+            border-color: #ffffff;
+        }
+
+        /* --- REMODELLED HOME SCREEN STYLES --- */
+        #screen-home {
+            width: 100%;
+            padding: 10px;
+            gap: 25px;
+            pointer-events: auto;
+        }
+
+        #screen-home h1 {
+            color: white;
+            font-size: 1.6rem;
+            line-height: 1.4;
+        }
+
+        #screen-home .enter-link {
+            background-color: #ffffff;
+            color: #21A0D2;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            margin-top: 0;
+        }
+
+        #screen-home .enter-link:hover {
+            background-color: #f0f4f8;
+            transform: translateY(-2px);
+        }
+
+        /* --- NAVIGATION BAR --- */
+        .nav-bar {
+            display: none;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background-color: #e0e0e0;
+            color: var(--text-color);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .nav-btn:hover { background-color: #d0d0d0; }
+
+        /* --- TYPOGRAPHY AND LAYOUT ADJUSTMENTS --- */
+        h1 {
+            color: var(--primary-color);
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            line-height: 1.4;
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .enter-link {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0, 122, 90, 0.3);
+            transition: all 0.2s;
+        }
+
+        .enter-link:hover {
+            background-color: #005a42;
+            transform: translateY(-2px);
+        }
+
+        .list-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .item-link {
+            display: block;
+            background-color: #f8f9fa;
+            border: 2px solid #e2e8f0;
+            padding: 14px 16px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.05rem;
+            line-height: 1.5;
+            transition: all 0.2s;
+            text-align: left;
+            word-wrap: break-word;
+        }
+
+        .item-link:hover {
+            background-color: #f0f4f8;
+            border-color: var(--primary-color);
+            transform: translateX(4px);
+        }
+
+        .game-link { border-left: 5px solid var(--accent-color); }
+        
+        .game-link iframe {
+            width: 100%;
+            max-width: 100%;
+            min-height: 450px;
+            border-radius: 10px;
+        }
+
+        #game-player-container iframe {
+        width: 100%;
+        height: 75vh;
+        min-height: 600px;
+        border: none;
+        border-radius: 12px;
+        }
+
+        #screen-player {
+        width: 100%;
+        }
+        .chapter-title {
+            font-size: 0.85rem;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        /* --- CSR FOOTER IN BOTTOM REGION --- */
+        .csr-footer {
+            margin-top: auto;      /* Pushes the footer safely to the bottom of the flex container */
+            padding-top: 30px;     /* Keeps a healthy distance from the links/buttons above */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            text-align: right;
+            width: 100%;
+            gap: 2px;
+        }
+
+        .csr-text {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* When home screen is active, turns the text white to stand out over the full blue layout */
+        .home-active .csr-text {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .csr-logo {
+            width: 120px;          /* Clean, explicit size constraint for mobile/web views */
+            height: auto;
+            object-fit: contain;
+            margin-top: 0;
+        }
+
+        /* --- CLEAN MOBILE OPTIMIZATION OVERRIDES --- */
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .app-container { padding: 20px 15px; margin-top: 5px; }
+            h1 { font-size: 1.35rem; }
+            h2 { font-size: 1.15rem; }
+            .item-link { font-size: 0.95rem; padding: 12px 14px; }
+            .top-logo { width: 100px; }
+            .lang-toggle-btn { padding: 5px 10px; font-size: 0.8rem; }
+            .csr-footer { padding-top: 20px; }
+            .csr-logo { width: 100px; }
+        }
+    </style>
+</head>
+<body class="theme-home">
+
+    <div id="app-container-wrapper" class="app-container home-active">
+        
+        <div class="top-bar">
+            <img src="logo.jpeg" class="top-logo" alt="ChemAmaze Logo">
+        </div>
+
+        <div id="navigation-bar" class="nav-bar">
+            <button id="btn-back" class="nav-btn" onclick="goBack()">← Back</button>
+            <button id="btn-main" class="nav-btn" onclick="goMain()">🏠 Main Page</button>
+        </div>
+
+        <div id="screen-home" class="screen active">
+            <h1 id="txt-app-title">ChemAmaze - CBSE Board Syllabus Games</h1>
+            <a href="#" id="txt-enter-btn" class="enter-link" onclick="navigateTo('subjects')">Click here to enter</a>
+            <div class="csr-footer">
+            <div class="csr-text">A CSR initiative of</div>
+            <img src="d-basf.png" class="csr-logo" alt="BASF Logo">
+        </div>
+        </div>
+
+        <div id="screen-subjects" class="screen">
+            <h2 id="txt-select-subject">Select Subject</h2>
+            <div class="list-container">
+                <a href="#" class="item-link" onclick="selectSubject('Mathematics')">
+                    <span class="lang-show en-inline">Mathematics</span>
+                </a>
+                <a href="#" class="item-link" onclick="selectSubject('Science')">
+                    <span class="lang-show en-inline">Science</span>
+                </a>
+            </div>
+        </div>
+
+        <div id="screen-grades" class="screen">
+            <h2 id="grade-screen-title">Select Class</h2>
+            <div class="list-container">
+                <a href="#" class="item-link" onclick="loadGames(6)"><span class="txt-class-prefix">Class</span> 6</a>
+                <a href="#" class="item-link" onclick="loadGames(7)"><span class="txt-class-prefix">Class</span> 7</a>
+                <a href="#" class="item-link" onclick="loadGames(8)"><span class="txt-class-prefix">Class</span> 8</a>
+            </div>
+        </div>
+
+        <div id="screen-games" class="screen">
+            <h2 id="selected-class-title">Games List</h2>
+            <div id="games-list-container" class="list-container">
+            </div>
+        </div>
+        <div id="screen-player" class="screen">
+    <h2 id="player-title">Game</h2>
+
+    <div id="game-player-container" style="width:100%;">
+    </div>
+</div>
+
+    </div>
+
+    <script>
+        const uiTranslations = {
+            en: {
+                appTitle: "ChemAmaze - CBSE Board Syllabus Games",
+                enterBtn: "Click here to enter",
+                selectSubject: "Select Subject",
+                selectClass: "Select Class",
+                classPrefix: "Class",
+                backBtn: "← Back",
+                mainBtn: "🏠 Main Page",
+                mathName: "Mathematics",
+                sciName: "Science",
+                comingSoon: "Coming Soon! No games added yet."
+            },
+        };
+
+        const gamesRepository = {
+            "Science": {
+                6: [
+                    {   chapter:{en:"Chapter 1"},
+                        topic:{en:"The Wonderful World of Science"},
+                        url:{en:"https://wordwall.net/play/114428/879/247"},
+
+                     embed_en: `
+                        <iframe 
+                            style="max-width:100%" 
+                            src="https://wordwall.net/embed/902e5393e8284753a76091adfb504b97?themeId=65&templateId=30&fontStackId=0" 
+                            width="500" 
+                            height="380" 
+                            frameborder="0" 
+                            allowfullscreen>
+                            </iframe>
+                        `
+                    },
+                    {   chapter:{en:"Chapter 2"},
+                        topic:{en:"Diversity in the Living World"},
+                        url:{en:"https://wordwall.net/play/114429/214/770"},
+                        embed_en:`
+                            <iframe 
+                            style="max-width:100%" 
+                            src="https://wordwall.net/embed/bb1ba4a1fac04154885138fdcd5e72fc?themeId=66&templateId=2&fontStackId=0" 
+                            width="500" 
+                            height="380" 
+                            frameborder="0" 
+                            allowfullscreen>
+                                </iframe>
+                            `
+                    },
+                    {   chapter:{en:"Chapter 3"},
+                        topic:{en:"Mindful Eating: A Path to a Healthy Body"},
+                        url:{en:"https://wordwall.net/play/114428/224/363"},
+                        embed_en:`
+                            <iframe 
+                            style="max-width:100%" 
+                            src="https://wordwall.net/embed/a7887a79f77b44d1b658612e63ba5249?themeId=1&templateId=2&fontStackId=0" 
+                            width="500" 
+                            height="380" 
+                            frameborder="0" 
+                            allowfullscreen>
+                                </iframe>
+                              `
+                    }
+                ],
+              7:[
+                {   chapter:{en:"Chapter 1"},
+                        topic:{en:"The Ever-Evolving World of Science"},
+                        url:{en:"https://wordwall.net/play/114429/507/971"},
+                        embed_en:`
+                            <iframe 
+                            style="max-width:100%" 
+                            src="https://wordwall.net/embed/1b724e307b6d47e8affd6c7d0944b3af?themeId=49&templateId=5&fontStackId=0" 
+                            width="500" 
+                            height="380" 
+                            frameborder="0" 
+                            allowfullscreen>
+                                </iframe>
+                              `
+                    },
+                    {
+                        chapter:{en:"Chapter 2"},
+                        topic:{en:"Exploring Substances – Acidic, Basic, Neutral"},
+                        url:{en:"https://wordwall.net/play/114429/730/696"},
+                        embed_en:`
+                            <iframe 
+                            style="max-width:100%" 
+                            src="https://wordwall.net/embed/a65ec73189804f928b1520d3d59d6d22?themeId=41&templateId=2&fontStackId=0" 
+                            width="500" 
+                            height="380" 
+                            frameborder="0" 
+                            allowfullscreen>
+                                </iframe>
+                              `
+                    },{
+                        chapter:{en:"Chapter 3"},
+                        topic:{en:"Electricity – Circuits and Their Components"},
+                        url:{en:"https://wordwall.net/play/114472/315/254"},
+                        embed_en:`
+                            <iframe 
+                            style="max-width:100%" 
+                            src="https://wordwall.net/embed/c688b560828a4d35a4558664d675e6de?themeId=50&templateId=3&fontStackId=0" 
+                            width="500" 
+                            height="380" 
+                            frameborder="0" 
+                            allowfullscreen>
+                            </iframe>
+                              `
+                    }
+                ],
+                8:[
+                    {
+                        chapter:{en:"Chapter 1"},
+                        topic:{en:"Exploring the Investigative World of Science"},
+                        url:{en:"https://wordwall.net/play/114473/393/992"},
+                        embed_en:`
+                            <iframe 
+                            style="max-width:100%" 
+                            src="https://wordwall.net/embed/a147fcb315c64c1395c53d7f768ab24f?themeId=21&templateId=69&fontStackId=0" 
+                            width="500" 
+                            height="380" 
+                            frameborder="0" 
+                            allowfullscreen>
+                                </iframe>
+                                `
+                    },{
+                        chapter:{en:"Chapter 2"},
+                        topic:{en:"The Invisible Living World: Beyond Our Naked Eye"},
+                        url:{en:"https://wordwall.net/play/114473/150/599"},
+                        embed_en:`
+                            <iframe 
+                            style="max-width:100%" 
+                            src="https://wordwall.net/embed/063743a33e7f48099c733ebe130b9954?themeId=2&templateId=3&fontStackId=0" 
+                            width="500" 
+                            height="380" 
+                            frameborder="0" 
+                            allowfullscreen>
+                                </iframe>
+                              `
+                    },{
+                        chapter:{en:"Chapter 3"},
+                        topic:{en:"Health: The Ultimate Treasure"},
+                        url:{en:"https://wordwall.net/play/114473/236/438"},
+                        embed_en:`
+                            <iframe 
+                            style="max-width:100%" 
+                            src="https://wordwall.net/embed/aa9625937cb543698d66417b73351116?themeId=44&templateId=35&fontStackId=0" 
+                            width="500" 
+                            height="380" 
+                            frameborder="0" 
+                            allowfullscreen>
+                                </iframe>
+                              `
+                    }
+                ]
+            },
+            "Mathematics": {
+                6: [
+                    {
+                        chapter:{en:"Chapter 1"},
+                        topic:{en:"Patterns in Mathematics"},
+                        url:{en:"https://wordwall.net/play/114473/547/670"},
+                        embed_en:`
+                           <iframe 
+                           style="max-width:100%" 
+                           src="https://wordwall.net/embed/c4b879abc5e640f0aea477ef90d1d3a7?themeId=21&templateId=69&fontStackId=0" 
+                           width="500" 
+                           height="380" 
+                           frameborder="0" 
+                           allowfullscreen>
+                           </iframe>
+                            `
+                    },{
+                        chapter:{en:"Chapter 2"},
+                        topic:{en:"Lines and Angles"},
+                        url:{en:"https://wordwall.net/play/114473/633/569"},
+                        embed_en:`
+                          <iframe style="max-width:100%" 
+                          src="https://wordwall.net/embed/fda00015a9fe4fd8a83096b55e21315c?themeId=65&templateId=3&fontStackId=0" 
+                          width="500" 
+                          height="380" 
+                          frameborder="0" 
+                          allowfullscreen>
+                          </iframe>
+                            `
+
+                    },{
+                        chapter:{en:"Chapter 3"},
+                        topic:{en:"Number Play"},
+                        url:{en:"https://wordwall.net/play/114473/753/174"},
+                        embed_en:`
+                          <iframe style="max-width:100%" 
+                          src="https://wordwall.net/embed/518775fb815541feb6c08c7cd7f87fb5?themeId=22&templateId=45&fontStackId=0" 
+                          width="500" 
+                          height="380" 
+                          frameborder="0" 
+                          allowfullscreen>
+                          </iframe>
+                            `
+                    }
+                ],
+                7:[
+                    {
+                       chapter:{en:"Chapter 1"},
+                        topic:{en:"Large Numbers Around Us"},
+                        url:{en:"https://wordwall.net/play/114473/885/276"},
+                        embed_en:`
+                          <iframe style="max-width:100%" 
+                          src="https://wordwall.net/embed/cb244e39b55444e3b0635dba24b0596f?themeId=21&templateId=69&fontStackId=0" 
+                          width="500" 
+                          height="380" 
+                          frameborder="0" 
+                          allowfullscreen>
+                          </iframe>
+                            ` 
+                    },{
+                         chapter:{en:"Chapter 2"},
+                        topic:{en:"Arithmetic Expressions"},
+                        url:{en:"https://wordwall.net/play/114473/947/306"},
+                        embed_en:`
+                          <iframe style="max-width:100%" 
+                          src="https://wordwall.net/embed/c52e2809f15c48bb8317f7ea858b240a?themeId=1&templateId=5&fontStackId=0" 
+                          width="500" 
+                          height="380" 
+                          frameborder="0" 
+                          allowfullscreen>
+                          </iframe>
+                          `
+                    },{
+                        chapter:{en:"Chapter 3"},
+                        topic:{en:"A Peek Beyond the Point"},
+                        url:{en:"https://wordwall.net/play/114474/046/211"},
+                        embed_en:`
+                          <iframe style="max-width:100%" 
+                          src="https://wordwall.net/embed/61237658fb634e26a03445952f1628cc?themeId=65&templateId=2&fontStackId=0" 
+                          width="500" 
+                          height="380" 
+                          frameborder="0" 
+                          allowfullscreen></iframe>
+                          `
+                    }
+                ],
+                8:[
+                    {
+                      chapter:{en:"Chapter 1"},
+                        topic:{en:"A Square and A Cube"},
+                        url:{en:"https://wordwall.net/play/114474/116/438"},
+                        embed_en:`
+                          <iframe style="max-width:100%" 
+                          src="https://wordwall.net/embed/bb5b2014f3524208bc6ec847059e41fe?themeId=46&templateId=3&fontStackId=0" 
+                          width="500" 
+                          height="380" 
+                          frameborder="0" 
+                          allowfullscreen>
+                          </iframe>
+                          `  
+                    },{
+                        chapter:{en:"Chapter 2"},
+                        topic:{en:"Power Play"},
+                        url:{en:"https://wordwall.net/resource/114474183"},
+                        embed_en:`
+                          <iframe style="max-width:100%" 
+                          src="https://wordwall.net/embed/ea379b0b67ba413ba67fb49a870f2d5e?themeId=1&templateId=5&fontStackId=0" 
+                          width="500" 
+                          height="380" 
+                          frameborder="0" 
+                          allowfullscreen>
+                          </iframe>
+                          `
+                    },{
+                        chapter:{en:"Chapter 3"},
+                        topic:{en:"A Story of Numbers"},
+                        url:{en:"https://wordwall.net/play/114477/219/163"},
+                        embed_en:`
+                          <iframe style="max-width:100%" 
+                          src="https://wordwall.net/embed/432d54fa98e84cbebb3489d62f5d9ea4?themeId=42&templateId=11&fontStackId=0" 
+                          width="500" 
+                          height="380" 
+                          frameborder="0" 
+                          allowfullscreen>
+                          </iframe>
+                          `
+                    }
+                ]
+            }
+            };
+
+        let currentScreen = 'home';
+        let currentLang = 'en';
+        let selectedSubject = null;
+        let selectedClass = null;
+        let currentGame = null;
+
+        function setLanguage(langCode) {
+            currentLang = langCode;
+            
+            document.querySelectorAll('.lang-toggle-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`lang-${langCode}`).classList.add('active');
+            
+            if(langCode === 'ta') {
+                document.querySelectorAll('.en-inline').forEach(e => e.style.display = 'none');
+                document.querySelectorAll('.ta-inline').forEach(e => e.style.display = 'inline');
+            } else {
+                document.querySelectorAll('.en-inline').forEach(e => e.style.display = 'inline');
+                document.querySelectorAll('.ta-inline').forEach(e => e.style.display = 'none');
+            }
+
+            const dict = uiTranslations[langCode];
+            document.getElementById('txt-app-title').innerText = dict.appTitle;
+            document.getElementById('txt-enter-btn').innerText = dict.enterBtn;
+            document.getElementById('txt-select-subject').innerText = dict.selectSubject;
+            document.getElementById('btn-back').innerText = dict.backBtn;
+            document.getElementById('btn-main').innerText = dict.mainBtn;
+            
+            document.querySelectorAll('.txt-class-prefix').forEach(span => {
+                span.innerText = dict.classPrefix;
+            });
+
+            if (selectedSubject) {
+                const subjectLabel = selectedSubject === 'Mathematics' ? dict.mathName : dict.sciName;
+                document.getElementById('grade-screen-title').innerText = `${subjectLabel} - ${dict.selectClass}`;
+            }
+            if (selectedClass) {
+                loadGames(selectedClass); 
+            }
+        }
+
+        function navigateTo(screenName) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`screen-${screenName}`).classList.add('active');
+            
+            const navBar = document.getElementById('navigation-bar');
+            const wrapper = document.getElementById('app-container-wrapper');
+            const bodyEl = document.body;
+
+            navBar.style.display = (screenName === 'home') ? 'none' : 'flex';
+            
+            if (screenName === 'home') {
+                wrapper.classList.add('home-active');
+                bodyEl.className = "theme-home";
+                wrapper.style.pointerEvents = "none"; 
+            } else {
+                wrapper.classList.remove('home-active');
+                bodyEl.className = "theme-inner";
+                wrapper.style.pointerEvents = "auto";
+            }
+
+            currentScreen = screenName;
+        }
+
+        function selectSubject(subjectName) {
+            selectedSubject = subjectName;
+            const dict = uiTranslations[currentLang];
+            const subjectLabel = subjectName === 'Mathematics' ? dict.mathName : dict.sciName;
+            
+            document.getElementById('grade-screen-title').innerText = `${subjectLabel} - ${dict.selectClass}`;
+            selectedClass = null; 
+            navigateTo('grades');
+        }
+        function openGame(game) {
+            currentGame = game;
+            document.getElementById('player-title').innerText =
+            `${game.chapter[currentLang]} - ${game.topic[currentLang]}`;
+
+            document.getElementById('game-player-container').innerHTML =
+            currentLang === 'ta'
+                ? game.embed_ta
+                : game.embed_en;
+            navigateTo('player');
+        }
+
+        function loadGames(classId) {
+            selectedClass = classId;
+            const container = document.getElementById('games-list-container');
+            const title = document.getElementById('selected-class-title');
+            const dict = uiTranslations[currentLang];
+            
+            const subjectLabel = selectedSubject === 'Mathematics' ? dict.mathName : dict.sciName;
+            title.innerText = `${subjectLabel} : ${dict.classPrefix} ${classId}`;
+            container.innerHTML = ''; 
+
+            const games = gamesRepository[selectedSubject]?.[classId] || [];
+
+            if(games.length > 0) {
+                games.forEach(game => {
+                   if (
+                        (currentLang === 'ta' && game.embed_ta) ||
+                        (currentLang === 'en' && game.embed_en)
+                    )
+                    {
+                    const gameCard = document.createElement('a');
+
+                    gameCard.href = "#";
+                    gameCard.className = "item-link game-link";
+
+                    gameCard.innerHTML = `
+                    <div class="chapter-title">${game.chapter[currentLang]}</div>
+                    <div>${game.topic[currentLang]}</div>
+
+                    <div style="
+                    margin-top:10px;
+                    color:#21A0D2;
+                    font-size:0.9rem;
+                    font-weight:bold;">
+                    ▶ Play Game
+                    </div>
+                    `;
+
+                    gameCard.onclick = function(e) {
+                    e.preventDefault();
+                    openGame(game);
+                    };
+
+                    container.appendChild(gameCard);
+                    }
+                });
+                    } else {
+                    container.innerHTML = `<p style="color: #666; padding: 20px;">${dict.comingSoon}</p>`;
+                    }
+
+            navigateTo('games');
+        }
+
+        function goBack() {
+            if (currentScreen === 'player') {
+                navigateTo('games');
+            }
+
+            else if (currentScreen === 'games') {
+                selectedClass = null;
+                navigateTo('grades');
+            }
+
+            else if (currentScreen === 'grades') {
+                selectedSubject = null;
+                navigateTo('subjects');
+            }
+
+            else if (currentScreen === 'subjects') {
+                navigateTo('home');
+            }
+        }
+
+        function goMain() {
+            selectedSubject = null;
+            selectedClass = null;
+            navigateTo('home');
+        }
+
+        setLanguage('en');
+    </script>
+</body>
+</html>
